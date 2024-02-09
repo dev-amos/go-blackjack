@@ -35,6 +35,7 @@ const (
 )
 
 // Card represents a playing card
+// Card does not have to be generic. Can implement a struct with Suit and Rank that has no integer value. For the concrete class to decide what value to put on them.
 type Card struct {
 	Suit Suit
 	Rank Rank
@@ -46,6 +47,7 @@ func (c Card) String() string {
 }
 
 // Deck represents a deck of cards
+// Also can be struct, assume all poker games will need a deck
 type Deck struct {
 	cards []Card
 }
@@ -72,6 +74,7 @@ func (d *Deck) Shuffle() {
 }
 
 // DrawCard draws a card from the deck
+// Assumes 
 func (d *Deck) DrawCard() Card {
 	if len(d.cards) == 0 {
 		panic("Deck is empty")
@@ -82,6 +85,7 @@ func (d *Deck) DrawCard() Card {
 }
 
 // Hand represents a collection of cards
+// Generic - logic in how game is played with cards and decks should be contained within concrete class of hands
 type Hand interface {
 	Cards() []Card
 	AddCard(card Card)
@@ -133,6 +137,9 @@ func (h *BlackjackHand) Value() int {
 
 // PlayBlackjack simulates a Blackjack game against the dealer
 func PlayBlackjack(deck *Deck) {
+	deck := NewDeck()
+	deck.Shuffle() // Shuffle the deck before dealing cards
+	
 	player := BlackjackHand{}
 	dealer := BlackjackHand{}
 
@@ -145,7 +152,7 @@ func PlayBlackjack(deck *Deck) {
 	fmt.Println("Your cards:", player.Cards())
 	fmt.Println("Dealer shows:", dealer.Cards()[1]) // Don't reveal dealer's hole card
 
-	// Player turn
+	// Player turn - assuming one player, one dealer scenario
 	for {
   	action := ""
   	fmt.Println("Hit (h) or Stand (s)?")
